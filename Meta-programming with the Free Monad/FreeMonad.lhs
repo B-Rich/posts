@@ -1,3 +1,8 @@
+> {-# LANGUAGE DeriveFunctor #-} -- HIDE
+> -- HIDE
+> import Control.Monad -- HIDE
+> import Control.Monad.Free -- HIDE
+
 The Free Monad is something I've been having a great deal of difficulty
 wrapping my head around.  It's one of those Haskell concepts that ends up
 being far simpler than any of the articles on the Net would have you think.
@@ -22,24 +27,22 @@ Here's what our processing function might look like:
 
 And the output, as expected:
 
-    [ghci]
-    interpret instrs
+    ghci> interpret instrs
+    Going left
+    Going right
+    Going left
+    Saw shutdown, stopping
 
 Easy as pie, right?  But a lot of the simplicity here is because the example
 is simplistic.  What if we want to vary the operations depending on hints from
 the caller?  So let's trade a little bit of simplicity up front, for a lot
 more expressiveness (and a return to simplicity) further on down the road...
 
-## Enter the Free Monad
+\## Enter the Free Monad
 
 The first step toward using the Free Monad is to make our `Directive` type
 recursive, and give it a Functor instance:
 
-> {-# LANGUAGE DeriveFunctor #-}
->
-> import Control.Monad
-> import Control.Monad.Free
->
 > data FDirective next = FL next | FR next | FS
 >   deriving Functor
 
@@ -47,7 +50,7 @@ We will now chain directives together using the `Free` data type, from
 `Control.Monad.Free` (in the `free` package on Hackage).  Here's what the Free
 data type looks like:
 
-> data Free f r = Free (f (Free f r)) | Pure r
+< data Free f r = Free (f (Free f r)) | Pure r
 
 And our set of instructions encoded using it:
 
@@ -78,8 +81,14 @@ And we get this:
 >   right
 >   left
 >   shutdown
->
-> runRobot = interpret' instrs4
+
+Check to make sure the output is the same:
+
+    ghci> interpret' instrs4
+    Going left
+    Going right
+    Going left
+    Saw shutdown, stopping
 
 The new `runRobot` works!  We've gone from a list that used brackets and
 commas, to a list that uses just newlines.  But we've gained something along
@@ -93,12 +102,17 @@ the way: we can now express logic directly in the robot's programming:
 >      else right
 >   left
 >   shutdown
->
-> runRobot2 = interpret' (instrs5 True)
 
-As the logic gets more complicated, it would be much uglier hard to do -- and
-less optimal in many ways -- if we were still using lists to sequence
-instructions.
+And check again:
+
+    ghci> interpret' (instrs5 True)
+    Going left
+    Going right
+    Going left
+    Saw shutdown, stopping
+
+As the logic gets more complicated, it would be much harder to do -- and less
+optimal in many ways -- if we were still using lists to sequence instructions.
 
 What the Free Monad therefore gives us is the ability to create
 imperative-style DSLs, for which we can write any number of different

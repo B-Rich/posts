@@ -4,13 +4,13 @@ around, since neither the definition nor the documentation is very clear about
 on you might use it for.  However, I've found one handy use case: creating
 recursive lambdas.
 
+> import Data.Function (fix) -- HIDE
+
 Say you have a list of `Maybe` values and you're writing a `map` with a lambda
 expression to walk over them.  For whatever reason, your algorithm turns
 `Nothing` into `Just 10`, and any other value into some complicated
 expression (useless example given here):
 
-> import Data.Function (fix)
->
 > foo :: [Maybe Int] -> [Maybe Int]
 > foo = map $ \x ->
 >   case x of
