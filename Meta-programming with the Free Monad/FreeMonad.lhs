@@ -107,7 +107,7 @@ And check again:
 
     ghci> interpret' (instrs5 True)
     Going left
-    Going right
+    Going left
     Going left
     Saw shutdown, stopping
 

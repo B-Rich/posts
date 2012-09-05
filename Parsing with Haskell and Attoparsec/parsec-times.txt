@@ -1,0 +1,11 @@
+=== Timing for a straight egrep of the file ===
+62.7190449238
+
+=== C++ quick raw scan (fseeking past file contents) ===
+181.361342033
+
+=== C++ straight raw scan (all contents read) ===
+112.856620391
+
+=== Haskell straight raw scan (all contents read) ===
+26.2282863458

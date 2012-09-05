@@ -30,9 +30,16 @@ makeXF f = Transform (const . arr . mapBlocks $ f) (const True)
 --   them.
 removeBirdTracks :: Block -> Block
 removeBirdTracks (RawBlock "html" src) =
-  let src'  = (replace src "<span style=\"\">&gt;</span>"
-                       "<span style=\"\"></span>")
-  in RawBlock "html" src'
+  let src'   = (replace src
+                "<span class=\"fu\">&gt;</span> "
+                "<span class=\"fu\"></span>")
+      src''  = (replace src'
+                "<span class=\"fu\">&gt;</span>"
+                "<span class=\"fu\"></span>")
+      src''' = (replace src''
+                "<span class=\"fu\"></span><span class=\"ot\"> "
+                "<span class=\"fu\"></span><span class=\"ot\">")
+  in RawBlock "html" src'''
 removeBirdTracks b = b
 
 -- | If a code block contains "-- HIDE" anywhere within it, drop that block
@@ -88,8 +95,8 @@ main :: IO ()
 main = blogLiteratelyCustom' [ ghciXF
                              , imagesXF
                              , makeXF hiddenBlocks
-                             , makeXF removeBirdTracks
                              , highlightXF
+                             , makeXF removeBirdTracks
                              , centerImagesXF ]
 
 -- Main.hs ends here

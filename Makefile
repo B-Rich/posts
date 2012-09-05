@@ -13,10 +13,10 @@ clean:
 	rm $(DEST)
 
 %.html: %.lhs
-	literate --ghci $< > $@
+	literate --hs-kate --ghci $< > $@
 
 upload: $(SOURCE)
-	literate --ghci --upload-images					\
+	literate --hs-kate --ghci --upload-images			\
 	         --blog http://$(HOST)/xmlrpc.php			\
 	         --user "$(USER)" --password "$(PASS)"			\
                  --title "$(shell head -1 info)"			\
