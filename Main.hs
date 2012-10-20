@@ -1,14 +1,12 @@
 {-# LANGUAGE RecordWildCards #-}
 
-import System.Console.CmdArgs
-import Control.Arrow
-import Text.BlogLiterately
--- import Debug.Trace (trace)
-
+import           System.Console.CmdArgs
+import           Control.Arrow
+import           Text.BlogLiterately
+import           Data.List
 import qualified System.IO.UTF8 as U (readFile)
-import Text.Pandoc
-import Data.List
-import Text.Blaze.Html.Renderer.String (renderHtml)
+import           Text.Blaze.Html.Renderer.String (renderHtml)
+import           Text.Pandoc
 
 -- | Replace a sublist with another list.
 replace :: (Eq a) => [a] -> [a] -> [a] -> [a]
@@ -53,9 +51,12 @@ hiddenBlocks b = b
 --   because Markdown uses # for headers, but Literate Haskell doesn't accept
 --   them.
 fixHeaders :: String -> String
-fixHeaders [] = []
-fixHeaders ('\\':'#':cs) = '#':cs
-fixHeaders (c:cs) = c:fixHeaders cs
+fixHeaders = unlines . map (\l -> if "\\#" `isPrefixOf` l
+                                  then drop 1 l else l) . lines
+
+fixupTables :: String -> String
+fixupTables txt = replace txt "<table>"
+                              "<table style=\"width: 50%; margin: 20px\">"
 
 -- | This and the next function replace the versions provided by BlogLiterally
 --   so that I can run `fixHeaders` before `readMarkdown`.
@@ -69,6 +70,7 @@ xformDoc' bl xforms = runKleisli $
 
   >>> arr     (writeHtml writeOpts)
   >>> arr     renderHtml
+  >>> arr     fixupTables
   where
     writeOpts = defaultWriterOptions
                 { writerReferenceLinks = True }

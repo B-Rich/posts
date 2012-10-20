@@ -23,5 +23,6 @@ upload: $(SOURCE)
 		 --postid $(shell tail -1 info)				\
 		 --category $(shell head -2 info | tail -1)		\
 	         $<
+	open "http://www.newartisans.com"
 
 ### Makefile ends here
