@@ -1,3 +1,4 @@
 *.html
 /dist/
 /cabal-dev/
+/vendor/

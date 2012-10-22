@@ -1,0 +1,3 @@
+git://github.com/bgamari/regex-pcre-builtin.git
+git://github.com/jwiegley/BlogLiterately.git ghc-7.6-compat
+./

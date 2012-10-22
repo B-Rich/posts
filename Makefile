@@ -4,6 +4,8 @@ USER=johnw
 HOST=www.newartisans.com
 PASS=$(shell grep '^machine $(HOST)' ~/.authinfo | awk '{print $$6}')
 
+LITERATE=$(HOME)/Documents/Posts/cabal-dev/bin/literate
+
 SOURCE=$(wildcard *.lhs)
 DEST=$(patsubst %.lhs,%.html,$(SOURCE))
 
@@ -13,10 +15,10 @@ clean:
 	rm $(DEST)
 
 %.html: %.lhs
-	literate --hs-kate --ghci $< > $@
+	$(LITERATE) --hs-kate --ghci $< > $@
 
 upload: $(SOURCE)
-	literate --hs-kate --ghci --upload-images			\
+	$(LITERATE) --hs-kate --ghci --upload-images			\
 	         --blog http://$(HOST)/xmlrpc.php			\
 	         --user "$(USER)" --password "$(PASS)"			\
                  --title "$(shell head -1 info)"			\
