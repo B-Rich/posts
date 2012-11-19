@@ -10,24 +10,6 @@
 module Adjunction where
 
 import Prelude (Num)
-
-undefined ∷ a
-undefined = undefined
-
-($) ∷ (a → b) → a → b
-f $ x = f x
-
-flip ∷ (a → b → c) → b -> a → c
-flip f x y = f y x
-
-const ∷ a → b → a
-const x _ = x
-
-fst ∷ (a,b) → a
-fst (x,_) = x
-
-snd ∷ (a,b) → b
-snd (_,x) = x
 
 class Category cat where
   id  ∷ cat a a
@@ -134,6 +116,12 @@ put s _ = (s,())
 runState ∷ State s a → s → (s,a)
 runState act = act
 
+fst ∷ (a,b) → a
+fst (x,_) = x
+
+snd ∷ (a,b) → b
+snd (_,x) = x
+
 evalState ∷ State s a → s → a
 evalState = (snd ∘) ∘ runState
 
@@ -141,7 +129,7 @@ execState ∷ State s a → s → s
 execState = (fst ∘) ∘ runState
 
 foo ∷ Num a ⇒ State a a
-foo = runState $ put 10 >> η 20 >> get
+foo = runState (put 10 >> get)
 
 class Monoid m where
   mempty  ∷ m
