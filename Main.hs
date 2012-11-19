@@ -73,7 +73,9 @@ xformDoc' bl xforms = runKleisli $
   >>> arr     fixupTables
   where
     writeOpts = defaultWriterOptions
-                { writerReferenceLinks = True }
+                { writerReferenceLinks = True
+                , writerHTMLMathMethod =
+                  MathJax "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" }
     parseOpts = defaultParserState
                 { stateLiterateHaskell = True }
 
