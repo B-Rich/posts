@@ -4,8 +4,6 @@ introduction to Edward Kmett's excellent
 
 > import Control.Lens           -- HIDE
 > import Control.Arrow
-> import Control.Category
-> import Prelude hiding (id, (.))
 
 `Control.Lens` provides a composable way to access and modify sub-parts of
 data structures (where by modify I mean: return a new copy with that part
