@@ -19,7 +19,7 @@ Extra-Source-Files: README.md
 Executable literate
     Main-is: Main.hs
     Build-depends: base >= 4 && < 6, BlogLiterately, pandoc, blaze-html,
-                   utf8-string, cmdargs
+                   utf8-string, cmdargs, lens
 
 Source-repository head
   type:     git

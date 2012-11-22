@@ -17,6 +17,15 @@ clean:
 %.html: %.lhs
 	$(LITERATE) --hs-kate --ghci $< > $@
 
+initial: $(SOURCE)
+	$(LITERATE) --hs-kate --ghci --upload-images	    \
+	         --blog http://$(HOST)/xmlrpc.php	    \
+	         --user "$(USER)" --password "$(PASS)"	    \
+                 --title "$(shell head -1 info)"	    \
+		 --category $(shell head -2 info | tail -1) \
+	         $<
+	open "http://www.newartisans.com"
+
 upload: $(SOURCE)
 	$(LITERATE) --hs-kate --ghci --upload-images	    \
 	         --blog http://$(HOST)/xmlrpc.php	    \
@@ -25,6 +34,5 @@ upload: $(SOURCE)
 		 --postid $(shell tail -1 info)		    \
 		 --category $(shell head -2 info | tail -1) \
 	         $<
-	open "http://www.newartisans.com"
 
 ### Makefile ends here

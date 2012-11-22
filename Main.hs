@@ -28,16 +28,16 @@ makeXF f = Transform (const . arr . mapBlocks $ f) (const True)
 --   them.
 removeBirdTracks :: Block -> Block
 removeBirdTracks (RawBlock "html" src) =
-  let src'   = (replace src
-                "<span class=\"fu\">&gt;</span> "
-                "<span class=\"fu\"></span>")
-      src''  = (replace src'
-                "<span class=\"fu\">&gt;</span>"
-                "<span class=\"fu\"></span>")
-      src''' = (replace src''
-                "<span class=\"fu\"></span><span class=\"ot\"> "
-                "<span class=\"fu\"></span><span class=\"ot\">")
-  in RawBlock "html" src'''
+  RawBlock "html"
+    $ (\x -> replace x "\n<span style=\"color: gray;\">ghci"
+                      "<span style=\"color: gray;\">ghci")
+    $ (\x -> replace x "<span class=\"fu\"></span><span class=\"ot\"> "
+                      "<span class=\"fu\"></span><span class=\"ot\">")
+    $ (\x -> replace x "<span class=\"fu\">&gt;</span>"
+                      "<span class=\"fu\"></span>")
+    $ (\x -> replace x "<span class=\"fu\">&gt;</span> "
+                      "<span class=\"fu\"></span>")
+    $ src
 removeBirdTracks b = b
 
 -- | If a code block contains "-- HIDE" anywhere within it, drop that block
@@ -56,7 +56,7 @@ fixHeaders = unlines . map (\l -> if "\\#" `isPrefixOf` l
 
 fixupTables :: String -> String
 fixupTables txt = replace txt "<table>"
-                              "<table style=\"width: 50%; margin: 20px\">"
+                              "<table style=\"width: 70%; margin: 20px\">"
 
 -- | This and the next function replace the versions provided by BlogLiterally
 --   so that I can run `fixHeaders` before `readMarkdown`.
