@@ -25,8 +25,8 @@ class Functor f where
 class (Functor f, Functor g) ⇒ Adjunction f g where
   η ∷ a → g (f a)               -- unit (natural transformation)
   ε ∷ f (g a) → a               -- counit (natural transformation)
-  φ ∷ (f a → b) → a → g b       -- two natural isomorphisms
-  ψ ∷ (b → g a) → f b → a
+  φ ∷ (f a → b) → (a → g b)     -- a natural isomorphism
+  ψ ∷ (a → g b) → (f a → b)
 
   η   = φ id
   ε   = ψ id
@@ -42,6 +42,9 @@ class Adjunction f g ⇒ Monad f g where
 
   (>>) ∷ g (f a) → g (f b) → g (f b)
   x >> f = x >>= \_ → f
+
+join ∷ Monad f g => g (f (g (f a))) → g (f a)
+join = μ
 
 class Adjunction f g ⇒ Comonad f g where
   δ ∷ f (g a) → f (g (f (g a)))
@@ -74,12 +77,14 @@ instance d ~ e ⇒ Adjunction (Prod d) (Hom e) where
   -- η ∷ a → e → f a
   -- η ∷ a → e → (e,a)
   η x y = (y,x)
+  -- η = flip (,)
 
   -- ε ∷ f (g a) → a
   -- ε ∷ f (e → a) → a
   -- ε ∷ (e, e → a) → a
   -- ε ∷ (e, e → a) → a
   ε (y,f) = f y
+  -- ε = uncurry (flip id)
 
   -- φ ∷ (f a → b) → a → g b
   -- φ ∷ (f a → b) → a → e → b
